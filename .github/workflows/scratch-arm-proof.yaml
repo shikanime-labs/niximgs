@@ -1,0 +1,34 @@
+name: Scratch ARM Proof
+on:
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  arm-build-proof:
+    name: Native ARM64 whisparr build (proof)
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - id: createGithubAppToken
+        continue-on-error: true
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.OPERATOR_APP_CLIENT_ID }}
+          permission-contents: read
+          private-key: ${{ secrets.OPERATOR_PRIVATE_KEY }}
+      - uses: shikanime-labs/actions/checkout@v9
+        with:
+          github-token: ${{ steps.createGithubAppToken.outputs.token || secrets.GITHUB_TOKEN }}
+      - uses: shikanime-labs/actions/nix/setup@v9
+        with:
+          cachix-auth-token: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          github-token: ${{ steps.createGithubAppToken.outputs.token || secrets.GITHUB_TOKEN }}
+      - name: Build whisparr for linux/arm64 (no push)
+        run: |
+          nix run github:shikanime-studio/nix-containers -- skaffold build
+        env:
+          IMAGE: ghcr.io/shikanime-labs/niximgs/whisparr:proof-arm
+          PLATFORMS: '["linux/arm64"]'
+          PUSH_IMAGE: "false"
+          BUILD_CONTEXT: "."
+          ACCEPT_FLAKE_CONFIG: "true"
+          NO_PURE_EVAL: "true"
