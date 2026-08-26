@@ -7,11 +7,13 @@ on:
       - skaffold.yaml
 permissions:
   contents: read
-  packages: write
 jobs:
   build-per-arch:
     name: Build ${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+      packages: write
     strategy:
       fail-fast: false
       matrix:
@@ -63,6 +65,9 @@ jobs:
     name: Merge multi-arch manifests
     needs: [ build-per-arch ]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: docker/login-action@v4
         with:
