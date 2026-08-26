@@ -3,6 +3,9 @@ kind: Config
 metadata:
   name: niximgs
 build:
+  tagPolicy:
+    envTemplate:
+      template: "{{.IMAGE_TAG}}"
   artifacts:
     - custom:
         buildCommand:
