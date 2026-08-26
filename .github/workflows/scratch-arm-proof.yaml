@@ -30,7 +30,7 @@ jobs:
           nix run github:shikanime-studio/nix-containers -- skaffold build
         env:
           IMAGE: ghcr.io/shikanime-labs/niximgs/whisparr:proof-arm
-          PLATFORMS: '["linux/arm64"]'
+          PLATFORMS: linux/arm64
           PUSH_IMAGE: "false"
           BUILD_CONTEXT: "."
           ACCEPT_FLAKE_CONFIG: "true"
