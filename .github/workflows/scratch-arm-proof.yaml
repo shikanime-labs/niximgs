@@ -42,10 +42,14 @@ jobs:
         with:
           github-token: ${{ steps.createGithubAppToken.outputs.token || secrets.GITHUB_TOKEN }}
       - name: Build all artifacts for ${{ matrix.arch }}
-        run: skaffold build
+        id: skaffold
+        uses: shikanime-labs/actions/skaffold/integration@v9
+        with:
+          platforms: '["${{ matrix.platform }}"]'
+          push: true
         env:
-          SKAFFOLD_PLATFORM: ${{ matrix.platform }}
-          SKAFFOLD_PUSH: "true"
+          PLATFORMS: ${{ matrix.platform }}
+          PUSH_IMAGE: "true"
           IMAGE_TAG: ${{ matrix.arch }}-${{ github.sha }}
           GITHUB_TOKEN: ${{ steps.createGithubAppToken.outputs.token || secrets.GITHUB_TOKEN }}
       - name: Report pushed tags
