@@ -41,6 +41,8 @@ jobs:
       - uses: shikanime-labs/actions/nix/setup@v9
         with:
           github-token: ${{ steps.createGithubAppToken.outputs.token || secrets.GITHUB_TOKEN }}
+      - id: direnv
+        uses: shikanime-labs/actions/direnv@v9
       - name: Build all artifacts for ${{ matrix.arch }}
         id: skaffold
         uses: shikanime-labs/actions/skaffold/integration@v9
