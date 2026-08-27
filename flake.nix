@@ -6,11 +6,10 @@
     };
 
     devlib = {
-      url = "github:shikanime-studio/devlib";
+      url = "github:shikanime-labs/devlib";
       inputs = {
         devenv.follows = "devenv";
         flake-parts.follows = "flake-parts";
-        git-hooks.follows = "git-hooks";
         nixpkgs.follows = "nixpkgs";
         treefmt-nix.follows = "treefmt-nix";
       };
@@ -78,63 +77,41 @@
             imports = [
               inputs.devlib.devenvModules.git
               inputs.devlib.devenvModules.nix
-              inputs.devlib.devenvModules.opentofu
               inputs.devlib.devenvModules.shell
-              inputs.devlib.devenvModules.shikanime-studio
+              inputs.devlib.devenvModules.skaffold
             ];
+
             github = {
-              settings.workflows = {
-                integration = {
-                  jobs.skaffold = {
-                    needs = [ "nix" ];
-                    secrets.CACHIX_AUTH_TOKEN = "\${{ secrets.CACHIX_AUTH_TOKEN }}";
-                  };
-                  on.workflow_call.secrets.CACHIX_AUTH_TOKEN.required = mkDefault true;
-                };
+              enable = true;
+              settings.workflows.cleanup.enable = true;
+              settings.workflows.commands.enable = true;
+              settings.workflows.integration.enable = true;
+              settings.workflows.release.enable = true;
+              settings.workflows.triage.enable = true;
+              settings.workflows.update.enable = true;
+              settings.global.workflows.integration.on.pull_request.branches = [ "main" ];
+            };
 
-                release = {
-                  jobs.skaffold = {
-                    needs = [ "nix" ];
-                    secrets.CACHIX_AUTH_TOKEN = "\${{ secrets.CACHIX_AUTH_TOKEN }}";
-                  };
-                  on.workflow_call.secrets.CACHIX_AUTH_TOKEN.required = mkDefault true;
-                };
-
-                skaffold.on.workflow_call.secrets.CACHIX_AUTH_TOKEN.required = mkDefault true;
-
-                wakabox = {
-                  name = "Wakabox";
-                  on.schedule = [
-                    { cron = "0 0 * * *"; }
-                  ];
-                  jobs.wakabox = {
-                    runs-on = "ubuntu-latest";
-                    steps = [
-                      {
-                        uses = "matchai/waka-box@v5.0.0";
-                        env = {
-                          GH_TOKEN = "\${{ secrets.WAKABOX_GITHUB_TOKEN }}";
-                          GIST_ID = "\${{ vars.WAKABOX_GITHUB_GIST_ID }}";
-                          WAKATIME_API_KEY = "\${{ secrets.WAKATIME_API_KEY }}";
-                        };
-                      }
-                    ];
-                  };
-                  permissions.contents = "read";
-                };
-              };
-
-              workflows.skaffold = {
-                enable = true;
-                settings.setup-nix = {
-                  cachix-auth-token = "\${{ secrets.CACHIX_AUTH_TOKEN }}";
-                  extra-platforms = "arm64";
-                };
+            renovate = {
+              enable = true;
+              settings = {
+                packageRules = [
+                  {
+                    matchPackageNames = [ "nixpkgs" ];
+                    updateConfig = { allow = [ "^nixpkgs-unstable$" ]; };
+                  }
+                ];
               };
             };
 
-            packages = with pkgs; [
-              skaffold
+            treefmt.config.settings.global.excludes = [
+              "*.nix"
+              ".envrc"
+              ".gitattributes"
+              ".github/workflows/*.yaml"
+              ".github/workflows/*.yml"
+              ".github/actions/**/*.yml"
+              ".github/actions/**/*.yaml"
             ];
           };
           packages = {

@@ -40,7 +40,6 @@ nix develop --impure -c skaffold build
 - Body with labels: `Design:`, `Related:`, `Closes #`
 - Keep Markdown lines wrapped at 80 columns and run `nix fmt` before shipping
 
-
 ## Editing Pull Requests
 
 - The commit title and description **are** the pull request title and body.
@@ -49,6 +48,7 @@ nix develop --impure -c skaffold build
   - `gh pr edit <PR_NUMBER> --body "New body"` — update the body
   - `gh pr edit <PR_NUMBER> --body-file /path/to/file.md` — set body from file
 - Amending the commit (`jj squash` / `git commit --amend`) and resubmitting
+
 ## Protect `main`
 
 - Require 1 approving review
@@ -56,5 +56,5 @@ nix develop --impure -c skaffold build
 - Require signed commits
 - Squash+rebase merge only
 
-*Always use worktrees when making changes. Test image builds with
-`nix build .#<image>` before submitting.*
+_Always use worktrees when making changes. Test image builds with
+`nix build .#<image>` before submitting._
