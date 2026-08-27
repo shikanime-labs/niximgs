@@ -1,4 +1,6 @@
 name: Skaffold
+permissions:
+  contents: read
 on:
   workflow_call:
     secrets:
@@ -12,8 +14,6 @@ on:
         default: true
         description: "Whether to push images during build"
   workflow_dispatch: {}
-permissions:
-  contents: read
 jobs:
   setup-profiles-jobs:
     name: Setup Profiles Jobs
@@ -67,9 +67,9 @@ jobs:
           push: ${{ inputs.push }}
   build-render-profile:
     name: Build & Render (Profile)
-    needs: [setup-profiles-jobs]
     if: needs['setup-profiles-jobs'].outputs.continue == 'true'
     runs-on: ubuntu-latest
+    needs: [setup-profiles-jobs]
     permissions:
       contents: read
       packages: write

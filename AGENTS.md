@@ -40,10 +40,7 @@ nix develop --impure -c skaffold build
 - Body with labels: `Design:`, `Related:`, `Closes #`
 - Keep Markdown lines wrapped at 80 columns and run `nix fmt` before shipping
 
-
 ## Editing Pull Requests
-
-
 
 - The commit title and description **are** the pull request title and body.
 - To edit the PR body after creation, use `gh pr edit <PR_NUMBER>`:

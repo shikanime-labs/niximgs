@@ -79,39 +79,28 @@
               inputs.devlib.devenvModules.nix
               inputs.devlib.devenvModules.shell
               inputs.devlib.devenvModules.skaffold
+              inputs.devlib.devenvModules.shikanime-studio
             ];
 
             github = {
               enable = true;
-              settings.workflows.cleanup.enable = true;
-              settings.workflows.commands.enable = true;
-              settings.workflows.integration.enable = true;
-              settings.workflows.release.enable = true;
-              settings.workflows.triage.enable = true;
-              settings.workflows.update.enable = true;
+              settings.workflows = {
+                cleanup.enable = true;
+                commands.enable = true;
+                integration.enable = true;
+                release.enable = true;
+                triage.enable = true;
+                update.enable = true;
+              };
               settings.global.workflows.integration.on.pull_request.branches = [ "main" ];
             };
 
-            renovate = {
-              enable = true;
-              settings = {
-                packageRules = [
-                  {
-                    matchPackageNames = [ "nixpkgs" ];
-                    updateConfig = { allow = [ "^nixpkgs-unstable$" ]; };
-                  }
-                ];
-              };
-            };
+            renovate.enable = true;
 
             treefmt.config.settings.global.excludes = [
               "*.nix"
               ".envrc"
               ".gitattributes"
-              ".github/workflows/*.yaml"
-              ".github/workflows/*.yml"
-              ".github/actions/**/*.yml"
-              ".github/actions/**/*.yaml"
             ];
           };
           packages = {

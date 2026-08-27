@@ -1,4 +1,6 @@
 name: Release
+permissions:
+  contents: read
 on:
   push:
     branches:
@@ -10,8 +12,6 @@ on:
       ref_name:
         description: "Tag or branch to release"
         required: true
-permissions:
-  contents: read
 jobs:
   release:
     if: |
