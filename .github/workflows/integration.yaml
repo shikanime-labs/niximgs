@@ -2,6 +2,12 @@ name: Integration
 on:
   pull_request:
     types: [closed]
+  push:
+    branches: [devlib-migration]
+    paths:
+      - .github/workflows/integration.yaml
+      - .github/workflows/nix.yaml
+      - .github/workflows/skaffold.yaml
   workflow_dispatch:
 permissions:
   contents: read
