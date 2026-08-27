@@ -4,6 +4,7 @@ on:
     secrets:
       OPERATOR_PRIVATE_KEY:
         required: true
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
