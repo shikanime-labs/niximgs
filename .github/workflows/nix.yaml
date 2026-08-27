@@ -32,7 +32,8 @@ jobs:
       contents: read
     strategy:
       fail-fast: false
-      matrix.include: ${{ fromJSON(needs['setup-checks-jobs'].outputs.matrix) }}
+      matrix:
+        include: ${{ fromJSON(needs['setup-checks-jobs'].outputs.matrix) }}
     steps:
       - id: createGithubAppToken
         uses: actions/create-github-app-token@v3
