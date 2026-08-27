@@ -62,9 +62,16 @@ jobs:
           github-token: ${{ steps.createGithubAppToken.outputs.token || secrets.GITHUB_TOKEN }}
       - id: direnv
         uses: shikanime-labs/actions/direnv@v9
+<<<<<<< HEAD
       - uses: shikanime-labs/actions/skaffold/integration@v9
         with:
           push: ${{ inputs.push }}
+||||||| b5d9ba9
+      - env: ${{ fromJSON(steps.direnv.outputs.env) }}
+        uses: shikanime-studio/actions/skaffold/integration@v9
+=======
+      - uses: shikanime-studio/actions/skaffold/integration@v9
+>>>>>>> origin/main
   build-render-profile:
     name: Build & Render (Profile)
     needs: [setup-profiles-jobs]

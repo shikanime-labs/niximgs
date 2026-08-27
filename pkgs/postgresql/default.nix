@@ -1,6 +1,6 @@
 { base, pkgs }:
 
-pkgs.dockerTools.streamLayeredImage {
+pkgs.dockerTools.buildLayeredImage {
   name = "postgresql";
   tag = pkgs.postgresql.version;
   fromImage = base;
@@ -14,6 +14,9 @@ pkgs.dockerTools.streamLayeredImage {
     ];
     ExposedPorts = {
       "5432/tcp" = { }; # PostgreSQL default port
+    };
+    Volumes = {
+      "/var/lib/postgresql/data" = { };
     };
     Labels = {
       "org.opencontainers.image.source" = "https://github.com/shikanime/niximgs";
