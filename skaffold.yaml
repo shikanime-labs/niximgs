@@ -5,34 +5,26 @@ metadata:
 build:
   artifacts:
     - custom:
-        buildCommand:
-          nix run github:shikanime-studio/nix-containers -- skaffold build
+        buildCommand: nix run github:shikanime-studio/nix-containers -- skaffold build
       image: ghcr.io/shikanime-labs/niximgs/jellyfin
     - custom:
-        buildCommand:
-          nix run github:shikanime-studio/nix-containers -- skaffold build
+        buildCommand: nix run github:shikanime-studio/nix-containers -- skaffold build
       image: ghcr.io/shikanime-labs/niximgs/mlflow
     - custom:
-        buildCommand:
-          nix run github:shikanime-studio/nix-containers -- skaffold build
+        buildCommand: nix run github:shikanime-studio/nix-containers -- skaffold build
       image: ghcr.io/shikanime-labs/niximgs/postgresql
     - custom:
-        buildCommand:
-          nix run github:shikanime-studio/nix-containers -- skaffold build
+        buildCommand: nix run github:shikanime-studio/nix-containers -- skaffold build
       image: ghcr.io/shikanime-labs/niximgs/radarr
     - custom:
-        buildCommand:
-          nix run github:shikanime-studio/nix-containers -- skaffold build
+        buildCommand: nix run github:shikanime-studio/nix-containers -- skaffold build
       image: ghcr.io/shikanime-labs/niximgs/sonarr
     - custom:
-        buildCommand:
-          nix run github:shikanime-studio/nix-containers -- skaffold build
+        buildCommand: nix run github:shikanime-studio/nix-containers -- skaffold build
       image: ghcr.io/shikanime-labs/niximgs/syncthing
     - custom:
-        buildCommand:
-          nix run github:shikanime-studio/nix-containers -- skaffold build
+        buildCommand: nix run github:shikanime-studio/nix-containers -- skaffold build
       image: ghcr.io/shikanime-labs/niximgs/vaultwarden
     - custom:
-        buildCommand:
-          nix run github:shikanime-studio/nix-containers -- skaffold build
+        buildCommand: nix run github:shikanime-studio/nix-containers -- skaffold build
       image: ghcr.io/shikanime-labs/niximgs/whisparr

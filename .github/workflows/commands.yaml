@@ -1,129 +1,29 @@
 name: Commands
 permissions:
   contents: read
-"on":
-  issue_comment:
-    types:
-      - created
+  id-token: write
+  actions: write
 jobs:
-  backport:
-    if:
-      github.event.issue.pull_request != null &&
-      contains(github.event.comment.body, '.backport')
+  gh:
     runs-on: ubuntu-slim
+    permissions:
+      contents: read
+      id-token: write
+      actions: write
     steps:
-      - id: createGithubAppToken
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
+      - uses: actions/github-script@v7
         with:
-          app-id: ${{ vars.OPERATOR_APP_ID }}
-          permission-contents: write
-          permission-issues: write
-          permission-pull-requests: write
-          permission-workflows: write
-          private-key: ${{ secrets.OPERATOR_PRIVATE_KEY }}
-      - uses: shikanime-studio/actions/nix/setup@5993d4d95befc190a14c0d143583683d203ad8d1 # v9
-        with:
-          github-token: ${{ steps.createGithubAppToken.outputs.token }}
-      - uses: shikanime-studio/actions/command/backport@5993d4d95befc190a14c0d143583683d203ad8d1 # v9
-        with:
-          github-token: ${{ steps.createGithubAppToken.outputs.token }}
-          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          sign-commits: true
-  close:
-    if:
-      github.event.issue.pull_request != null &&
-      contains(github.event.comment.body, '.close')
-    runs-on: ubuntu-slim
-    steps:
-      - id: createGithubAppToken
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
-        with:
-          app-id: ${{ vars.OPERATOR_APP_ID }}
-          permission-contents: write
-          permission-issues: write
-          permission-pull-requests: write
-          private-key: ${{ secrets.OPERATOR_PRIVATE_KEY }}
-      - uses: shikanime-studio/actions/nix/setup@5993d4d95befc190a14c0d143583683d203ad8d1 # v9
-        with:
-          github-token: ${{ steps.createGithubAppToken.outputs.token }}
-      - uses: shikanime-studio/actions/command/close@5993d4d95befc190a14c0d143583683d203ad8d1 # v9
-        with:
-          github-token: ${{ steps.createGithubAppToken.outputs.token }}
-          username: operator6o
-  land:
-    if:
-      github.event.issue.pull_request != null &&
-      (contains(github.event.comment.body, '.land') ||
-      contains(github.event.comment.body, '.force-land'))
-    runs-on: ubuntu-slim
-    steps:
-      - id: createGithubAppToken
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
-        with:
-          app-id: ${{ vars.OPERATOR_APP_ID }}
-          permission-administration: read
-          permission-contents: write
-          permission-issues: write
-          permission-pull-requests: write
-          permission-workflows: write
-          private-key: ${{ secrets.OPERATOR_PRIVATE_KEY }}
-      - uses: shikanime-studio/actions/nix/setup@5993d4d95befc190a14c0d143583683d203ad8d1 # v9
-        with:
-          github-token: ${{ steps.createGithubAppToken.outputs.token }}
-      - uses: shikanime-studio/actions/command/land@5993d4d95befc190a14c0d143583683d203ad8d1 # v9
-        with:
-          email: operator6o@shikanime.studio
-          fullname: Operator 6O
-          github-token: ${{ steps.createGithubAppToken.outputs.token }}
-          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          sign-commits: true
-          username: operator6o
-  rebase:
-    if:
-      github.event.issue.pull_request != null &&
-      contains(github.event.comment.body, '.rebase')
-    runs-on: ubuntu-slim
-    steps:
-      - id: createGithubAppToken
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
-        with:
-          app-id: ${{ vars.OPERATOR_APP_ID }}
-          permission-contents: write
-          permission-issues: write
-          permission-pull-requests: write
-          permission-workflows: write
-          private-key: ${{ secrets.OPERATOR_PRIVATE_KEY }}
-      - uses: shikanime-studio/actions/nix/setup@5993d4d95befc190a14c0d143583683d203ad8d1 # v9
-        with:
-          github-token: ${{ steps.createGithubAppToken.outputs.token }}
-      - uses: shikanime-studio/actions/command/rebase@5993d4d95befc190a14c0d143583683d203ad8d1 # v9
-        with:
-          email: operator6o@shikanime.studio
-          fullname: Operator 6O
-          github-token: ${{ steps.createGithubAppToken.outputs.token }}
-          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          sign-commits: true
-          username: operator6o
-  run:
-    if:
-      github.event.issue.pull_request != null &&
-      contains(github.event.comment.body, '.run')
-    runs-on: ubuntu-slim
-    steps:
-      - id: createGithubAppToken
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
-        with:
-          app-id: ${{ vars.OPERATOR_APP_ID }}
-          permission-contents: write
-          permission-issues: write
-          permission-pull-requests: write
-          private-key: ${{ secrets.OPERATOR_PRIVATE_KEY }}
-      - uses: shikanime-studio/actions/nix/setup@5993d4d95befc190a14c0d143583683d203ad8d1 # v9
-        with:
-          github-token: ${{ steps.createGithubAppToken.outputs.token }}
-      - uses: shikanime-studio/actions/command/run@5993d4d95befc190a14c0d143583683d203ad8d1 # v9
-        with:
-          github-token: ${{ steps.createGithubAppToken.outputs.token }}
+          script: |
+            const { data } = await github.paginate(
+              github.rest.actions.listRepoWorkflowRuns,
+              { owner: context.repo.owner, repo: context.repo.repo }
+            );
+            for (const run of data.workflow_runs) {
+              if (run.status === 'queued' || (run.status === 'in_progress' && run.id !== context.runId)) {
+                await github.rest.actions.cancelWorkflowRun({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  run_id: run.id,
+                });
+              }
+            }
