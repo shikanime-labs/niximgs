@@ -15,6 +15,9 @@ pkgs.dockerTools.buildLayeredImage {
     ExposedPorts = {
       "5432/tcp" = { }; # PostgreSQL default port
     };
+    Volumes = {
+      "/var/lib/postgresql/data" = { };
+    };
     Labels = {
       "org.opencontainers.image.source" = "https://github.com/shikanime/niximgs";
       "org.opencontainers.image.description" = pkgs.postgresql.meta.description;
