@@ -2,22 +2,24 @@ name: Commands
 permissions:
   contents: read
   id-token: write
+  actions: write
 jobs:
   gh:
     runs-on: ubuntu-slim
     permissions:
       contents: read
       id-token: write
+      actions: write
     steps:
       - uses: actions/github-script@v7
         with:
           script: |
-            const { data } = await github.rest.actions.listRepoWorkflowRuns({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            });
+            const { data } = await github.paginate(
+              github.rest.actions.listRepoWorkflowRuns,
+              { owner: context.repo.owner, repo: context.repo.repo }
+            );
             for (const run of data.workflow_runs) {
-              if (run.status === 'queued' || run.status === 'in_progress') {
+              if (run.status === 'queued' || (run.status === 'in_progress' && run.id !== context.runId)) {
                 await github.rest.actions.cancelWorkflowRun({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
@@ -25,8 +27,3 @@ jobs:
                 });
               }
             }
-            await github.rest.actions.deleteWorkflowRun({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: context.runId,
-            });

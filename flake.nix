@@ -88,17 +88,16 @@
                 cleanup.enable = true;
                 commands.enable = true;
                 integration.enable = true;
+                integration.on.pull_request.branches = [ "main" ];
                 release.enable = true;
                 triage.enable = true;
                 update.enable = true;
               };
-              settings.global.workflows.integration.on.pull_request.branches = [ "main" ];
             };
 
             renovate.enable = true;
 
             treefmt.config.settings.global.excludes = [
-              "*.nix"
               ".envrc"
               ".gitattributes"
             ];

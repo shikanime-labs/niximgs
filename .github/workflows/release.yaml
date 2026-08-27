@@ -20,14 +20,12 @@ jobs:
     runs-on: ubuntu-slim
     permissions:
       contents: write
-      workflows: write
     steps:
       - id: createGithubAppToken
         uses: actions/create-github-app-token@v3
         with:
           client-id: ${{ vars.OPERATOR_APP_CLIENT_ID }}
           permission-contents: write
-          permission-workflows: write
           private-key: ${{ secrets.OPERATOR_PRIVATE_KEY }}
       - uses: shikanime-labs/actions/nix/setup@v9
         with:

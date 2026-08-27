@@ -1,4 +1,7 @@
 name: Cleanup
+on:
+  pull_request:
+    types: [closed]
 permissions:
   contents: read
 jobs:
