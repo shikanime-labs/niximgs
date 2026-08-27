@@ -44,6 +44,7 @@ nix develop --impure -c skaffold build
 ## Editing Pull Requests
 
 
+
 - The commit title and description **are** the pull request title and body.
 - To edit the PR body after creation, use `gh pr edit <PR_NUMBER>`:
   - `gh pr edit <PR_NUMBER> --title "New title"` — update the title

@@ -77,7 +77,7 @@ jobs:
             }}
       - id: direnv
         uses: shikanime-studio/actions/direnv@v9
-      - env: ${{ fromJSON(steps.direnv.outputs.env) }}
+      - name: Run flake check
         run:
           nix flake check --accept-flake-config --no-pure-eval --system "${{
           matrix.system }}"
@@ -127,8 +127,7 @@ jobs:
             }}
       - id: direnv
         uses: shikanime-studio/actions/direnv@v9
-      - env: ${{ fromJSON(steps.direnv.outputs.env) }}
-        uses: shikanime-studio/actions/nix/integration@v9
+      - uses: shikanime-studio/actions/nix/integration@v9
         with:
           name: ${{ matrix.name }}
           system: ${{ matrix.system }}
