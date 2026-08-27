@@ -1,4 +1,9 @@
 name: Nix
+on:
+  workflow_call:
+    secrets:
+      OPERATOR_PRIVATE_KEY:
+        required: true
 permissions:
   contents: read
 jobs:
